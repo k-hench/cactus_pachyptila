@@ -1,0 +1,13 @@
+.snakemake
+.Rproj.user
+results
+data
+scratch
+jobStore.img
+cactus_instructions*
+cactus_wd
+evolverMammals.txt
+
+sh/
+cactus_test.Rproj
+archive.md
