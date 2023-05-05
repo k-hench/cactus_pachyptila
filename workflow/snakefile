@@ -1,0 +1,43 @@
+'''
+snakemake --use-conda --cores 1 -R
+'''
+import os
+import numpy as np
+import pandas as pd
+from copy import deepcopy
+
+configfile: "workflow/config.yml"
+
+rule all:
+    params:
+      wd = os.getcwd()
+    message:
+     '''
+     This is a snakemake adapataion of a stepwise
+     execution of a progressive cactus alignment. 
+     
+     The pipeline execution is a two-step process,
+     as the number of 'rounds' of the cactus alignment
+     can not be determined before the compilation of
+     the cactus instructions.
+
+     Therefore, to run the pipeline, first call
+     `snakemake <options> cactus_prep` to create the file
+     "results/cactus/job_inventory.tsv" that lists the
+     number of jobs within each cactus round and which is 
+     needed for the rules within `cactus_stepwise.smk`.
+
+     Then, run `snakemake <options> cactus_stepwise` for
+     the actual alignment.
+     '''
+
+P_NAME = config[ 'alignment_name' ]
+G_REF = config[ 'refName' ]
+G_QUERY = config[ 'species' ]
+G_ALL = deepcopy(G_QUERY)
+G_ALL.insert( 0, G_REF )
+
+include: "./rules/cactus_prep.smk"
+
+if os.path.exists("results/cactus/job_inventory.tsv"):
+  include: "./rules/cactus_stepwise.smk"

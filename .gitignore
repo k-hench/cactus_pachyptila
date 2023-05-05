@@ -8,6 +8,8 @@ cactus_instructions*
 cactus_wd
 evolverMammals.txt
 
-sh/
+sh/cactus
+logs/*
+!sh/sm_*
 cactus_test.Rproj
 archive.md

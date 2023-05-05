@@ -1,4 +1,4 @@
-instructions <- readLines("cactus_instructions.sh")
+instructions <- readLines("results/cactus/cactus_instructions.sh")
 
 round_idx <- 0L
 round_name <- "preprocessor"
@@ -39,7 +39,7 @@ for( i in seq_along(instructions)){
 
 write.table(data.frame(round = seq_along(inventory),
                        n_jobs = inventory), 
-            file = "data/job_inventory.tsv", 
+            file = "results/cactus/job_inventory.tsv", 
             sep = "\t",
             quote = FALSE,
             row.names = FALSE)
@@ -85,7 +85,7 @@ for( i in seq_along(instructions)){
 }
 
 write.table(job_table, 
-            file = "data/job_list.tsv", 
+            file = "results/cactus/job_list.tsv", 
             sep = "\t",
             quote = FALSE,
             row.names = FALSE)

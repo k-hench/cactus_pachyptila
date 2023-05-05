@@ -1,14 +1,9 @@
-import os
-import numpy as np
-import pandas as pd
-
-job_file = "data/job_inventory.tsv"
-
+job_file = "results/cactus/job_inventory.tsv"
 rounds = pd.read_table(job_file)['round']
 n_rounds = rounds.max()
 n_jobs = pd.read_table(job_file)['n_jobs']
 
-rule all:
+rule cactus_stepwise:
     input: "results/checkpoints/done_round_{nr}.txt".format(nr = n_rounds)
 
 def collect_jobs(wildcards):
@@ -37,7 +32,3 @@ rule single_job:
       '''
       touch {output}
       '''
-
-rule start:
-    output: 'results/checkpoints/done_round_0.txt'
-    shell: "touch {output}"
