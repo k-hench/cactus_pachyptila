@@ -18,6 +18,7 @@ apptainer exec --cleanenv \
   ${CACTUS_IMAGE} \
   cactus-prepare \
   $(pwd)/${SEQFILE} \
+  ${CACTUS_OPTIONS} \
   --outDir /tmp/steps-output \
   --outSeqFile ${SEQFILE} \
   --outHal /tmp/steps-output/${OUTPUTHAL} \
