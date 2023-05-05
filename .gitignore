@@ -1,7 +1,6 @@
 .snakemake
 .Rproj.user
 results
-data
 scratch
 jobStore.img
 cactus_instructions*
