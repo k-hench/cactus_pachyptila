@@ -1,10 +1,14 @@
+"""
+# currently works without parallelization (cant mount img simultaneously)
+snakemake --jobs 1 cactus_stepwise
+"""
 job_file = "results/cactus/job_inventory.tsv"
 rounds = pd.read_table(job_file)['round']
 n_rounds = rounds.max()
 n_jobs = pd.read_table(job_file)['n_jobs']
 
 rule cactus_stepwise:
-    input: "results/checkpoints/done_round_{nr}.txt".format(nr = n_rounds)
+    input: 'results/cactus/{name}_check.txt'.format(name = P_NAME)
 
 def collect_jobs(wildcards):
   rnd = int(wildcards.nr)
@@ -67,7 +71,7 @@ rule single_job:
       echo "==================" &>> {log}
 
       apptainer exec --cleanenv \
-        --overlay {params.jobstore} \
+        --fakeroot --overlay ${{CACTUS_SCRATCH}} \
         --bind ${{CACTUS_SCRATCH}}/tmp:/tmp,$(pwd) \
         --env PYTHONNOUSERSITE=1 \
         {params.sif} \
@@ -75,3 +79,26 @@ rule single_job:
 
       touch {output}
       '''
+
+rule cactus_export_hal:
+    input:
+      final_step_check = "results/checkpoints/done_round_{nr}.txt".format(nr = n_rounds)
+    output:
+      hal = "results/cactus/{name}.hal".format(name = P_NAME)
+    params:
+      hal = "results/cactus/scratch/{name}/tmp/steps-output/{name}.hal".format(name = P_NAME)
+    shell:
+      """
+      mv {params.hal} {output.hal}
+      """
+
+rule cactus_check:
+    input: 'results/cactus/{name}.hal'.format(name = P_NAME)
+    output: 'results/cactus/{name}_check.txt'.format(name = P_NAME)
+    params:
+      sif = "docker://" + config['cactus_sif']
+    log: "logs/cactus/hal_check.log"
+    shell:
+      """
+      apptainer exec {params.sif} halStats {input} > {output}
+      """

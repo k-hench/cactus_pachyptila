@@ -4,6 +4,7 @@ readonly JOBSTORE_IMAGE="${snakemake_input}"
 readonly CACTUS_OPTIONS="--root mr"
 readonly SEQNAME=${SEQFILE##*/}
 readonly RUN_ID=${SEQNAME%.txt}
+readonly OUTPUTHAL=${RUN_ID}.hal
 readonly CACTUS_SCRATCH=results/cactus/scratch/${RUN_ID}
 
 echo "store: ""${JOBSTORE_IMAGE}" &> "${snakemake_log[0]}"
@@ -12,8 +13,9 @@ echo "file: " ${SEQFILE} &>> "${snakemake_log[0]}"
 echo "==================" &>> "${snakemake_log[0]}"
 echo "img: "${CACTUS_IMAGE} &>> "${snakemake_log[0]}"
 
+#   --overlay ${JOBSTORE_IMAGE} \
 apptainer exec --cleanenv \
-  --overlay ${JOBSTORE_IMAGE} \
+  --fakeroot --overlay ${CACTUS_SCRATCH} \
   --bind ${CACTUS_SCRATCH}/tmp:/tmp,$(pwd) \
   --env PYTHONNOUSERSITE=1 \
   ${CACTUS_IMAGE} \

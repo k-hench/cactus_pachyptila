@@ -3,6 +3,7 @@
 This is a [snakemake](https://snakemake.github.io/) adapataion (Mölder *et al.* 2021) of a [stepwise execution](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/progressive.md#running-step-by-step) of a [progressive cactus alignment](https://github.com/ComparativeGenomicsToolkit/cactus) (Armstrong *et al.* 2020) to create a hierarchical alignment of multiple genome sequences (a `.hal` file, Hickey, G. *et al.* 2013).
 
 The workflow is based on the official cactus documentation and the tuorial [Cactus on the FASRC Cluster](https://informatics.fas.harvard.edu/cactus-on-the-fasrc-cluster.html) by the Harvard Faculty of Arts and Sciences.
+A key adaptation here was to switch from a [*filesystem image overlay*](https://apptainer.org/docs/user/main/persistent_overlays.html#filesystem-image-overlay) to a [*directory overlay*](https://apptainer.org/docs/user/main/persistent_overlays.html#directory-overlay) to allow simultaneous access to the overlay directory by processes running in parallel (preventing a ` can't open ./jobStore.img for writing, currently in use by another process` [error](https://github.com/ComparativeGenomicsToolkit/cactus/issues/261)).
 
 The features of the adaptation are:
  - seamless execution on HPC trough `snakemake` (eg. grid enginge / slurm scheduling) 

@@ -4,17 +4,17 @@ rule cactus_prep:
     input: 'results/checkpoints/done_round_0.txt'
 
 rule parse_cactus_config:
-    output: 'results/cactus/{name}.txt'.format(name = P_NAME)
+    output: "results/checkpoints/jobstore_setup.txt"
     log: "logs/cactus/parse_config.log"
     params:
       genomes = G_ALL
     script: "../../py/sm_cactus_input.py"
 
 rule jobstore_setup:
-    input: 'results/cactus/{name}.txt'.format(name = P_NAME)
+    input: "results/checkpoints/jobstore_setup.txt"
     output: JOBSTORE_PATH
     params:
-      ["docker://" + config['cactus_sif'], config['expected_hal_size']]
+      ["docker://" + config['cactus_sif'], config['expected_hal_size'], 'results/cactus/{name}.txt'.format(name = P_NAME)]
     log: "logs/cactus/jobstore_setup.log"
     script: "../../sh/sm_cactus_jobstore.sh"
 
