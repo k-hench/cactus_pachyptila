@@ -50,7 +50,9 @@ inventory_digits <- floor(log10(inventory)) + 1L
 round_idx <- 0L
 round_name <- "preprocessor"
 job_idx <- 0
-job_table <- data.frame(round = c(),
+job_table <- data.frame(round_idx = c(),
+                        round = c(),
+                        job_idx = c(),
                         job = c())
 code_nr <- 0L
 
@@ -72,7 +74,9 @@ for( i in seq_along(instructions)){
     if(code_nr == 1L){
       job_table <- rbind(
         job_table,
-        data.frame(round = paste0("round_", round_idx),
+        data.frame(round_idx = round_idx,
+                   round = paste0("round_", round_idx),
+                   job_idx = job_idx,
                    job = paste0("job_", sprintf(paste0("%0", inventory_digits[round_idx],".0f"), job_idx),".sh"))
         )
     }
