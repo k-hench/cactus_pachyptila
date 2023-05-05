@@ -16,6 +16,9 @@ snakemake --jobs 3 \
   --jn job.{name}.{jobid}.sh \
   -R cactus_stepwise && mv job.* logs/
 """
+localrules: cactus_stepwise, round_completed, cactus_export_hal
+
+
 job_file = "results/cactus/job_inventory.tsv"
 rounds = pd.read_table(job_file)['round']
 n_rounds = rounds.max()
