@@ -1,77 +1,21 @@
-### prep data 
+## Background
 
-```sh
-wget https://raw.githubusercontent.com/ComparativeGenomicsToolkit/cactus/master/examples/evolverMammals.txt
-```
+This is a [snakemake](https://snakemake.github.io/) adapataion (Mölder *et al.* 2021) of a [stepwise execution](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/progressive.md#running-step-by-step) of a [progressive cactus alignment](https://github.com/ComparativeGenomicsToolkit/cactus) (Armstrong *et al.* 2020) to create a hierarchical alignment of multiple genome sequences (a `.hal` file, Hickey, G. *et al.* 2013).
 
-### setup of the cactus working directory
+The workflow is based on the official cactus documentation and the tuorial [Cactus on the FASRC Cluster](https://informatics.fas.harvard.edu/cactus-on-the-fasrc-cluster.html) by the Harvard Faculty of Arts and Sciences.
 
-```sh
-readonly CACTUS_IMAGE=docker://quay.io/comparative-genomics-toolkit/cactus:v2.5.1
-readonly JOBSTORE_IMAGE=jobStore.img
-readonly SEQFILE=evolverMammals.txt
-readonly OUTPUTHAL=evolverMammals.hal
-readonly CACTUS_OPTIONS='--root mr'
+## Running the pipeline
 
-RUN_ID='test'
+The pipeline execution is a two-step process, as the number of 'rounds' of the cactus alignment can not be determined before the compilation of the cactus instructions.
 
-readonly CACTUS_SCRATCH=scratch/cactus-${RUN_ID}
+Therefore, to run the pipeline, first call `snakemake <options> cactus_prep` to create the file "results/cactus/job_inventory.tsv" that lists the number of jobs within each cactus round and which is  needed for the rules within `cactus_stepwise.smk`.
 
-restart=''
-mkdir -p -m 777 ${CACTUS_SCRATCH}/upper ${CACTUS_SCRATCH}/work
-truncate -s 300M "${JOBSTORE_IMAGE}"
-apptainer exec --bind $(pwd) ${CACTUS_IMAGE} mkfs.ext3 -d ${CACTUS_SCRATCH} "${JOBSTORE_IMAGE}"
+Then, run `snakemake <options> cactus_stepwise` for the actual alignment.
 
-mkdir -m 700 -p ${CACTUS_SCRATCH}/tmp
-mkdir cactus_wd
-```
+## References
 
-### step by step preparation
+[Armstrong, J. *et al.* (2020)](https://doi.org/10.1038/s41586-020-2871-y) *Progressive Cactus is a multiple-genome aligner for the thousand-genome era.* Nature, 587(7833), 246–251. 
 
-generating the stepwise instructions
+[Hickey, G. *et al.* (2013)](https://doi.org/10.1093/bioinformatics/btt128) *HAL: a hierarchical format for storing and analyzing multiple genome alignments.* Bioinformatics, 29(10), 1341–1342. 
 
-```sh
-apptainer exec --cleanenv \
-  --overlay ${JOBSTORE_IMAGE} \
-  --bind ${CACTUS_SCRATCH}/tmp:/tmp,$(pwd) \
-  --env PYTHONNOUSERSITE=1 \
-  ${CACTUS_IMAGE} \
-  cactus-prepare \
-  "${SEQFILE}" \
-  --outDir /tmp/steps-output \
-  --outSeqFile /tmp/steps-output/"${SEQFILE}" \
-  --outHal /tmp/steps-output/"${OUTPUTHAL}" \
-  --jobStore /tmp/js > cactus_instructions.sh
-```
-
-parse cactus jobs / rounds
-
-```sh
-Rscript --vanilla R/parse_cactus_jobs.R
-```
-
-this distributes the steps over separate `sh` scripts grouped by round:
-
-```
-sh/
-└── cactus
-    ├── round_1
-    │   └── job_1.sh
-    ├── round_2
-    │   ├── job_1.sh
-    │   └── job_2.sh
-    ├── round_3
-    │   └── job_1.sh
-    ├── round_4
-    │   └── job_1.sh
-    └── round_5
-        └── job_1.sh
-```
-
-It also creates a `tsv` file to be used for the `snakemake` management of the execution of the individual scripts:
-
-## snakemake execution
-
-```sh
-snakemake -c 1
-```
+[Mölder, F. *et al.* (2021)](https://doi.org/10.12688/f1000research.29032.1) *Sustainable data analysis with Snakemake* (10:33). F1000Research. 
