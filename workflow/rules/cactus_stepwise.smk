@@ -1,5 +1,5 @@
 """
-snakemake --jobs 1 cactus_stepwise
+snakemake --jobs 3 cactus_stepwise
 """
 job_file = "results/cactus/job_inventory.tsv"
 rounds = pd.read_table(job_file)['round']
