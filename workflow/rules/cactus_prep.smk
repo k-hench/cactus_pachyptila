@@ -1,3 +1,6 @@
+"""
+snakemake -c 1 --use-conda cactus_prep
+"""
 JOBSTORE_PATH='results/cactus/jobStore.img'
 
 rule cactus_prep:
@@ -29,6 +32,7 @@ rule parse_cactus_steps:
     input: "results/cactus/cactus_instructions.sh"
     output: "results/checkpoints/done_round_0.txt"
     log: "logs/cactus/parse_instructions.log"
+    conda: "r_base"
     shell:
       """
       Rscript --vanilla R/parse_cactus_jobs.R &> {log} && touch {output}

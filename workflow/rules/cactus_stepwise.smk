@@ -1,5 +1,4 @@
 """
-# currently works without parallelization (cant mount img simultaneously)
 snakemake --jobs 1 cactus_stepwise
 """
 job_file = "results/cactus/job_inventory.tsv"
