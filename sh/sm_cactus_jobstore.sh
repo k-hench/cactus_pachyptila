@@ -1,8 +1,8 @@
 readonly CURRENT_DIR=$( pwd )
 readonly CACTUS_IMAGE=$( echo "${snakemake_params}" | awk '{print $1}')
-readonly JOBSTORE_SZ=$( echo "${snakemake_params}" | awk '{print $2}')
+#readonly JOBSTORE_SZ=$( echo "${snakemake_params}" | awk '{print $2}')
 readonly JOBSTORE_IMAGE=${snakemake_output}
-readonly SEQFILE=$( echo "${snakemake_params}" | awk '{print $3}')
+readonly SEQFILE=$( echo "${snakemake_params}" | awk '{print $2}')
 readonly SEQNAME=${SEQFILE##*/}
 readonly RUN_ID=${SEQNAME%.txt}
 readonly CACTUS_SCRATCH=results/cactus/scratch/${RUN_ID}

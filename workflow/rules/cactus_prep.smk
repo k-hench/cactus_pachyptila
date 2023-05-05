@@ -17,7 +17,7 @@ rule jobstore_setup:
     input: "results/checkpoints/jobstore_setup.txt"
     output: JOBSTORE_PATH
     params:
-      ["docker://" + config['cactus_sif'], config['expected_hal_size'], 'results/cactus/{name}.txt'.format(name = P_NAME)]
+      ["docker://" + config['cactus_sif'], 'results/cactus/{name}.txt'.format(name = P_NAME)]
     log: "logs/cactus/jobstore_setup.log"
     script: "../../sh/sm_cactus_jobstore.sh"
 

@@ -1,5 +1,20 @@
 """
 snakemake --jobs 3 cactus_stepwise
+
+snakemake --jobs 3 \
+  --latency-wait 30 \
+  -p \
+  --default-resources mem_mb=25600 threads=1 \
+  --cluster '
+    qsub \
+      -V -cwd \
+      -P fair_share \
+      -l idle=1 \
+      -l si_flag=1 \
+      -pe multislot {threads} \
+      -l vf={resources.mem_mb}' \
+  --jn job.{name}.{jobid}.sh \
+  -R cactus_stepwise && mv job.* logs/
 """
 job_file = "results/cactus/job_inventory.tsv"
 rounds = pd.read_table(job_file)['round']
@@ -99,5 +114,5 @@ rule cactus_check:
     log: "logs/cactus/hal_check.log"
     shell:
       """
-      apptainer exec {params.sif} halStats {input} > {output}
+      apptainer exec --bind $(pwd) {params.sif} halStats {input} > {output}
       """
