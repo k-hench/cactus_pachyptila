@@ -65,7 +65,7 @@ rule single_job:
       job_script = lambda wc: parse_job(wc)
     output: "results/checkpoints/done_round_{nr}_j{job}.txt"
     params:
-      sif = "docker://" + config['cactus_sif'],
+      sif = config['cactus_sif'],
       seqfile = 'results/cactus/{name}.txt'.format(name = P_NAME),
       jobstore = JOBSTORE_PATH
     log: "logs/cactus/jobs/round_{nr}_j{job}.log"
@@ -110,7 +110,7 @@ rule cactus_check:
     input: 'results/cactus/{name}.hal'.format(name = P_NAME)
     output: 'results/cactus/{name}_check.txt'.format(name = P_NAME)
     params:
-      sif = "docker://" + config['cactus_sif']
+      sif = config['cactus_sif']
     log: "logs/cactus/hal_check.log"
     shell:
       """

@@ -17,14 +17,14 @@ rule jobstore_setup:
     input: "results/checkpoints/jobstore_setup.txt"
     output: JOBSTORE_PATH
     params:
-      ["docker://" + config['cactus_sif'], 'results/cactus/{name}.txt'.format(name = P_NAME)]
+      [config['cactus_sif'], 'results/cactus/{name}.txt'.format(name = P_NAME)]
     log: "logs/cactus/jobstore_setup.log"
     script: "../../sh/sm_cactus_jobstore.sh"
 
 rule stepwise_instructions:
     input: JOBSTORE_PATH
     output: "results/cactus/cactus_instructions.sh"
-    params: ["docker://" + config['cactus_sif'], 'results/cactus/{name}.txt'.format(name = P_NAME)]
+    params: [config['cactus_sif'], 'results/cactus/{name}.txt'.format(name = P_NAME)]
     log: "logs/cactus/instructions.log"
     script: "../../sh/sm_cactus_instructions.sh"
 
