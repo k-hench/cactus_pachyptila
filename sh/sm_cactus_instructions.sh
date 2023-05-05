@@ -1,7 +1,7 @@
 readonly CACTUS_IMAGE=$( echo "${snakemake_params}" | awk '{print $1}')
 readonly SEQFILE=$( echo "${snakemake_params}" | awk '{print $2}')
 readonly JOBSTORE_IMAGE="${snakemake_input}"
-readonly CACTUS_OPTIONS='--root mr'
+readonly CACTUS_OPTIONS="'--root mr'"
 readonly RUN_ID=${SEQFILE%.txt}
 readonly CACTUS_SCRATCH=results/cactus/scratch/cactus-${RUN_ID}
 
@@ -18,7 +18,7 @@ apptainer exec --cleanenv \
   ${CACTUS_IMAGE} \
   cactus-prepare \
   $(pwd)/${SEQFILE} \
-  ${CACTUS_OPTIONS} \
+  --cactusOptions "${CACTUS_OPTIONS}" \
   --outDir /tmp/steps-output \
   --outSeqFile ${SEQFILE} \
   --outHal /tmp/steps-output/${OUTPUTHAL} \
