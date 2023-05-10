@@ -36,6 +36,7 @@ G_REF = config[ 'refName' ]
 G_QUERY = config[ 'species' ]
 G_ALL = deepcopy(G_QUERY)
 G_ALL.insert( 0, G_REF )
+CACTUS_CORES = config[ 'cactus_cores' ]
 
 include: "./rules/cactus_prep.smk"
 

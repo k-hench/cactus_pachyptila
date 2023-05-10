@@ -1,5 +1,6 @@
 readonly CACTUS_IMAGE=$( echo "${snakemake_params}" | awk '{print $1}')
 readonly SEQFILE=$( echo "${snakemake_params}" | awk '{print $2}')
+readonly CACTUS_CORES=$( echo "${snakemake_params}" | awk '{print $3}')
 readonly JOBSTORE_IMAGE="${snakemake_input}"
 readonly CACTUS_OPTIONS="--root mr"
 readonly SEQNAME=${SEQFILE##*/}
@@ -12,6 +13,8 @@ echo "==================" &>> "${snakemake_log[0]}"
 echo "file: " ${SEQFILE} &>> "${snakemake_log[0]}"
 echo "==================" &>> "${snakemake_log[0]}"
 echo "img: "${CACTUS_IMAGE} &>> "${snakemake_log[0]}"
+echo "==================" &>> "${snakemake_log[0]}"
+echo "cores: "${CACTUS_CORES} &>> "${snakemake_log[0]}"
 
 #   --overlay ${JOBSTORE_IMAGE} \
 apptainer exec --cleanenv \
@@ -21,6 +24,7 @@ apptainer exec --cleanenv \
   ${CACTUS_IMAGE} \
   cactus-prepare \
   $(pwd)/${SEQFILE} \
+  --defaultCores ${CACTUS_CORES} \
   --outDir /tmp/steps-output \
   --outSeqFile ${SEQFILE} \
   --outHal /tmp/steps-output/${OUTPUTHAL} \

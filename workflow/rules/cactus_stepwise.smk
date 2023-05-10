@@ -23,6 +23,7 @@ job_file = "results/cactus/job_inventory.tsv"
 rounds = pd.read_table(job_file)['round']
 n_rounds = rounds.max()
 n_jobs = pd.read_table(job_file)['n_jobs']
+s_bind_paths = config[ 'singularity_bind_paths' ]
 
 rule cactus_stepwise:
     input: 'results/cactus/{name}_check.txt'.format(name = P_NAME)
@@ -72,6 +73,7 @@ rule single_job:
       seqfile = 'results/cactus/{name}.txt'.format(name = P_NAME),
       jobstore = JOBSTORE_PATH
     log: "logs/cactus/jobs/round_{nr}_j{job}.log"
+    threads: int(CACTUS_CORES)
     shell:
       '''
       readonly CACTUS_IMAGE={params.sif} 
@@ -89,7 +91,7 @@ rule single_job:
 
       apptainer exec --cleanenv \
         --fakeroot --overlay ${{CACTUS_SCRATCH}} \
-        --bind ${{CACTUS_SCRATCH}}/tmp:/tmp,$(pwd) \
+        --bind ${{CACTUS_SCRATCH}}/tmp:/tmp,$(pwd),{s_bind_paths} \
         --env PYTHONNOUSERSITE=1 \
         {params.sif} \
         bash {input.job_script} &>> {log}
@@ -117,5 +119,5 @@ rule cactus_check:
     log: "logs/cactus/hal_check.log"
     shell:
       """
-      apptainer exec --bind $(pwd) {params.sif} halStats {input} > {output}
+      apptainer exec --bind $(pwd),{s_bind_paths} {params.sif} halStats {input} > {output}
       """
