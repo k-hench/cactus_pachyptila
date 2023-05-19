@@ -24,6 +24,7 @@ apptainer exec --cleanenv \
   ${CACTUS_IMAGE} \
   cactus-prepare \
   $(pwd)/${SEQFILE} \
+  --cactusOptions '--maskMode none' \
   --defaultCores ${CACTUS_CORES} \
   --outDir /tmp/steps-output \
   --outSeqFile ${SEQFILE} \
