@@ -88,9 +88,9 @@ for( i in seq_along(instructions)){
   }
 }
 
-write.table(job_table, 
-            file = "results/cactus/job_list.tsv", 
-            sep = "\t",
-            quote = FALSE,
-            row.names = FALSE)
+# write.table(job_table, 
+#             file = "results/cactus/job_list.tsv", 
+#             sep = "\t",
+#             quote = FALSE,
+#             row.names = FALSE)
 
