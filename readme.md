@@ -7,6 +7,10 @@
 >It is NOT extensivly tested, so please use and adapt with caution.<br>
 > !! ----------------------------------------------------------------- !! <br>
 
+### Fixed Settings
+
+Note, that all `cactus` jobs use `--maskMode none` in this approach, so all input genomes are required to be repeatmasked already.
+
 </div>
  
 ## Background
