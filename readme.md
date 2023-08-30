@@ -17,7 +17,7 @@ The workflow is based on the official cactus documentation and the tuorial [Cact
 A key adaptation here was to switch from a [*filesystem image overlay*](https://apptainer.org/docs/user/main/persistent_overlays.html#filesystem-image-overlay) to a [*directory overlay*](https://apptainer.org/docs/user/main/persistent_overlays.html#directory-overlay) to allow simultaneous access to the overlay directory by processes running in parallel (preventing a ` can't open ./jobStore.img for writing, currently in use by another process` [error](https://github.com/ComparativeGenomicsToolkit/cactus/issues/261)).
 
 The features of the adaptation are:
- - seamless execution on HPC trough `snakemake` (eg. grid enginge / slurm scheduling) 
+ - management of jobs on HPC trough `snakemake` (eg. grid enginge / slurm scheduling) 
  - execution within the [cactus container](https://quay.io/repository/comparative-genomics-toolkit/cactus?tab=info) for through [apptainer](https://apptainer.org/)
 
 The main idea is to pull apart the individual commands created by `cactus-prepare` and store them within individual `.sh` files.
