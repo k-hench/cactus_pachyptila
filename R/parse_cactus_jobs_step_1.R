@@ -82,7 +82,7 @@ for( i in seq_along(instructions)){
     }
     write(ln_cur,
           file = paste0(
-            script_dir, "/round_", round_idx, "/job_",
+            script_dir, "/round_", sprintf(paste0("%0", n_rounds_digits,".0f"), round_idx), "/job_",
             sprintf(paste0("%0", inventory_digits[round_idx],".0f"), job_idx),".sh"),
           append = TRUE)
   }

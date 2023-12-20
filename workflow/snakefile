@@ -42,3 +42,6 @@ include: "./rules/cactus_prep.smk"
 
 if os.path.exists("results/cactus/job_inventory.tsv"):
   include: "./rules/cactus_stepwise.smk"
+
+
+include: "./rules/hal_conversions.smk"

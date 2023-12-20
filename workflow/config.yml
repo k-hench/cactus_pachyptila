@@ -1,15 +1,24 @@
-alignment_name: 'mammal_set'
-refName: simHuman_chr6
+alignment_name: 'procellariiformes'
+refName: pa_de_D2102046010.v3_masked  
 
 species:
-  - simCow_chr6
-  - simDog_chr6
-  - simMouse_chr6
-  - simRat_chr6
+  - ca_bo_GCA_013401115.1_ASM1340111v1_genomic_masked
+  - fr_gr_GCA_013399335.1_ASM1339933v1_genomic_masked
+  - fu_gl_GCA_000690835.1_ASM69083v1_genomic_masked
+  - oc_oc_GCA_013396615.1_ASM1339661v1_genomic_masked
+  - oc_te_GCA_013397025.1_ASM1339702v1_genomic_masked
+  - pe_ur_GCA_013400755.1_ASM1340075v1_genomic_masked
+  - ph_al_GCA_014363385.1_P_albatrus_scaffold_01_genomic_masked
+  - pu_ma_GCA_023333565.1_ASM2333356v1_genomic_masked
+  - ri_tr_GCA_013401015.1_ASM1340101v1_genomic_masked
+  - sp_ma_GCA_010076225.1_BGI_Smag.V1_genomic_masked
+  - su_da_GCA_013389905.1_ASM1338990v1_genomic_masked
+  - th_ch_GCA_013400895.1_ASM1340089v1_genomic_masked 
 
-speciesTree: "((simHuman_chr6:0.144018,(simMouse_chr6:0.084509,simRat_chr6:0.091589)mr:0.271974):0.020593,(simCow_chr6:0.18908,simDog_chr6:0.16303):0.032898);"
+speciesTree: "(ri_tr_GCA_013401015.1_ASM1340101v1_genomic_masked,((su_da_GCA_013389905.1_ASM1338990v1_genomic_masked,sp_ma_GCA_010076225.1_BGI_Smag.V1_genomic_masked),((ph_al_GCA_014363385.1_P_albatrus_scaffold_01_genomic_masked,th_ch_GCA_013400895.1_ASM1340089v1_genomic_masked),((oc_oc_GCA_013396615.1_ASM1339661v1_genomic_masked,fr_gr_GCA_013399335.1_ASM1339933v1_genomic_masked),(oc_te_GCA_013397025.1_ASM1339702v1_genomic_masked,(fu_gl_GCA_000690835.1_ASM69083v1_genomic_masked,((pe_ur_GCA_013400755.1_ASM1340075v1_genomic_masked,pa_de_D2102046010.v3_masked),(pu_ma_GCA_023333565.1_ASM2333356v1_genomic_masked,ca_bo_GCA_013401115.1_ASM1340111v1_genomic_masked))))))));"
 
-cactus_sif: 'docker://quay.io/comparative-genomics-toolkit/cactus:v2.5.1'
+cactus_sif: '$CDATA/.apptainer/cactus_v2.5.1.sif'
 # the bind-path list needs to start with a ',' to be appended properly
-singularity_bind_paths: ''
-cactus_cores: "4"
+singularity_bind_paths: '$(pwd),$CDATA'
+cactus_cores: "16"
+
