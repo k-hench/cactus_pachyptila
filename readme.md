@@ -1,11 +1,6 @@
 <div style='color:#cc0000'>
 
-## Disclaimer
-
-> !! ----------------------------------------------------------------- !! <br>
-> This implementation was intended for my own needs to run `cactus` on a HPC via `slurm`.<br>
->It is NOT extensivly tested, so please use and adapt with caution.<br>
-> !! ----------------------------------------------------------------- !! <br>
+Adaptation of the `cactus_test` repository for the prion Pachyptila project.
 
 ### Fixed Settings
 
