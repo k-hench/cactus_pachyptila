@@ -5,7 +5,7 @@ snakemake --jobs 50 \
   --configfile workflow/config.yml \
   --latency-wait 30 \
   -p \
-  --default-resources mem_mb=51200 threads=1 \
+  --default-resources mem_mb=10240 threads=1 \
   --use-singularity \
   --singularity-args "--bind $CDATA" \
   --use-conda \
@@ -21,26 +21,24 @@ snakemake --jobs 50 \
       -R convert_hal
 """
 
-TIP_SPECS = ",".join(G_QUERY)
-MSCAFS = [ "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "x"]
-# with open('data/scaffolds.txt') as f:
-#     MSCAFS = f.read().splitlines()
-
 rule convert_hal:
     input: 
-      maf = expand("results/maf/{name}_{mscaf}.maf", name = P_NAME, mscaf = MSCAFS)
+      maf = "results/maf/{name}.maf".format(name = P_NAME),
+      bed = "results/coverage/collapsed/{name}.collapsed.bed.gz".format(name = P_NAME)
 
 rule hal_to_maf:
     input:
       hal = 'results/cactus/{name}.hal'
     output:
-      maf = "results/maf/{name}_{mscaf}.maf"
-    log: "logs/hal_to_maf_{name}_{mscaf}.log"
+      maf = "results/maf/{name}.maf"
+    log: "logs/hal_to_maf_{name}.log"
     params:
       sif = c_cactus,
       js = "results/cactus/scratch/{name}/",
-      local_js = "js_{name}_{mscaf}",
-      run = "run_{name}_{mscaf}"
+      local_js = "js_{name}",
+      run = "run_{name}"
+    resources:
+      mem_mb=40960
     shell:
       """
       readonly CACTUS_IMAGE={params.sif} 
@@ -58,9 +56,54 @@ rule hal_to_maf:
         {input.hal} \
         {output.maf} \
         --refGenome {G_REF} \
-        --refSequence {wildcards.mscaf} \
         --dupeMode single \
         --filterGapCausingDupes \
         --chunkSize 1000000 \
         --noAncestors 2> {log}
+      """
+
+rule alignment_coverage:
+    input:
+      hal = 'results/cactus/{name}.hal'.format(name = P_NAME)
+    output:
+      wig = "results/coverage/wig/{name}.wig.gz"
+    params:
+      prefix = "results/coverage/wig/{name}.wig"
+    container: c_cactus
+    shell:
+      """
+      halAlignmentDepth \
+        {input.hal} \
+        {G_REF} \
+        --noAncestors \
+        --outWiggle {params.prefix}
+      gzip {params.prefix}
+      """
+
+# ultimately we want a bed file as mask, so we convert the wig to bed format
+rule wig_to_bed:
+    input:
+      wig = "results/coverage/wig/{name}.wig.gz"
+    output:
+      bed = "results/coverage/raw/{name}.bed.gz" 
+    container: c_conda
+    conda: "bedops"
+    shell:
+      """
+      zcat {input.wig} | wig2bed | gzip > {output.bed}
+      """
+
+# unfortunetely, the original bed is single bp elements,
+# so we collapse them into chunks of equal coverage 
+rule collapse_cov_bed:
+    input:
+      bed = "results/coverage/raw/{name}.bed.gz" 
+    output:
+      bed = "results/coverage/collapsed/{name}.collapsed.bed.gz"
+    log: "logs/collapse_cov_bed_{name}.log"
+    container: c_conda
+    conda: "r_tidy"
+    shell:
+      """
+      Rscript --vanilla R/collapse_bed_coverage.R {input.bed} {output.bed} &>> {log}
       """

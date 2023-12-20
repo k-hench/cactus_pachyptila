@@ -1,5 +1,7 @@
 data/*.gz
+data/*.fai
 logs
 results
 sh/cactus
 .snakemake
+.Rproj.user

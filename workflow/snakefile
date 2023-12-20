@@ -38,6 +38,9 @@ G_ALL = deepcopy(G_QUERY)
 G_ALL.insert( 0, G_REF )
 CACTUS_CORES = config[ 'cactus_cores' ]
 
+c_cactus = config[ 'cactus_sif' ]
+c_conda = config[ 'conda_sif' ]
+
 include: "./rules/cactus_prep.smk"
 
 if os.path.exists("results/cactus/job_inventory.tsv"):
