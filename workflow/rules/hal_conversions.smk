@@ -1,8 +1,7 @@
 """
-snakemake --configfile workflow/config.yml --rerun-triggers mtime -n -R convert_hal
+snakemake --rerun-triggers mtime -n -R convert_hal
 
 snakemake --jobs 50 \
-  --configfile workflow/config.yml \
   --latency-wait 30 \
   -p \
   --default-resources mem_mb=10240 threads=1 \
