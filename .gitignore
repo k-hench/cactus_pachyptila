@@ -5,3 +5,4 @@ results
 sh/cactus
 .snakemake
 .Rproj.user
+*.swp

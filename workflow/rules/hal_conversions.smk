@@ -25,9 +25,22 @@ rule convert_hal:
       maf = "results/maf/{name}.maf".format(name = P_NAME),
       bed = "results/coverage/collapsed/{name}.collapsed.bed.gz".format(name = P_NAME)
 
+rule hal_rename_genomes:
+    input:
+      hal = 'results/cactus/{name}.hal',
+      tsv = 'data/genomes_alias.tsv'
+    output:
+      check = touch( 'results/checkpoints/hal_genome_rename.check' )
+    container: c_cactus
+    shell:
+      """
+      halRenameGenomes  {input.hal} {input.tsv}
+      """
+
 rule hal_to_maf:
     input:
-      hal = 'results/cactus/{name}.hal'
+      hal = 'results/cactus/{name}.hal',
+      check = 'results/checkpoints/hal_genome_rename.check'
     output:
       maf = "results/maf/{name}.maf"
     log: "logs/hal_to_maf_{name}.log"
