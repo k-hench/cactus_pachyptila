@@ -30,7 +30,7 @@ rule hal_rename_genomes:
       hal = 'results/cactus/{name}.hal',
       tsv = 'data/genomes_alias.tsv'
     output:
-      check = touch( 'results/checkpoints/hal_genome_rename.check' )
+      check = touch( 'results/checkpoints/hal_{name}_genome_rename.check' )
     container: c_cactus
     shell:
       """
@@ -40,7 +40,7 @@ rule hal_rename_genomes:
 rule hal_to_maf:
     input:
       hal = 'results/cactus/{name}.hal',
-      check = 'results/checkpoints/hal_genome_rename.check'
+      check = 'results/checkpoints/hal_{name}_genome_rename.check'
     output:
       maf = "results/maf/{name}.maf"
     log: "logs/hal_to_maf_{name}.log"
