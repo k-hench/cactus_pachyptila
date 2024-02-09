@@ -20,6 +20,12 @@ snakemake --jobs 50 \
       -R convert_hal
 """
 
+rename_data = pd.read_table('data/genomes_alias.tsv', usecols=[0,1], names=['old', 'new'])
+
+def get_new_name(nm):
+    return( rename_data["new"][ rename_data["old"] == nm ].values[0] )
+
+
 rule convert_hal:
     input: 
       maf = "results/maf/{name}.maf".format(name = P_NAME),
@@ -80,13 +86,14 @@ rule alignment_coverage:
     output:
       wig = "results/coverage/wig/{name}.wig.gz"
     params:
-      prefix = "results/coverage/wig/{name}.wig"
+      prefix = "results/coverage/wig/{name}.wig",
+      ref_new = get_new_name(G_REF)
     container: c_cactus
     shell:
       """
       halAlignmentDepth \
         {input.hal} \
-        {G_REF} \
+        {params.ref_new} \
         --noAncestors \
         --outWiggle {params.prefix}
       gzip {params.prefix}
