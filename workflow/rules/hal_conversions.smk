@@ -77,7 +77,8 @@ rule hal_to_maf:
         --dupeMode single \
         --filterGapCausingDupes \
         --chunkSize 1000000 \
-        --noAncestors 2> {log}
+        --noAncestors \
+        --maxDisk 200G 2> {log}
       """
 
 rule alignment_coverage:
