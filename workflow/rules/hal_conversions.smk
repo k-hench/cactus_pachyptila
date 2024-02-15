@@ -54,7 +54,8 @@ rule hal_to_maf:
       sif = c_cactus,
       js = "results/cactus/scratch/{name}/",
       local_js = "js_{name}",
-      run = "run_{name}"
+      run = "run_{name}",
+      g_updated = get_new_name(G_REF)
     resources:
       mem_mb=40960
     shell:
@@ -73,7 +74,7 @@ rule hal_to_maf:
         /tmp/{params.local_js} \
         {input.hal} \
         {output.maf} \
-        --refGenome {G_REF} \
+        --refGenome {params.g_updated} \
         --dupeMode single \
         --filterGapCausingDupes \
         --chunkSize 1000000 \
