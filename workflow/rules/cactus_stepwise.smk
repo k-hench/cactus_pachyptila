@@ -152,7 +152,7 @@ rule cactus_export_hal:
       hal = "results/cactus/scratch/{name}/tmp/steps-output/{name}.hal".format(name = P_NAME)
     shell:
       """
-      mv {params.hal} {output.hal}
+      cp {params.hal} {output.hal}
       """
 
 rule cactus_check:
